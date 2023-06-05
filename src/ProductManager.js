@@ -1,5 +1,6 @@
 //import  fs from 'fs';
-import fs from 'fs/promises'
+import fs from 'fs'
+
 
 export class ProductManager{
   constructor(path,producto){
@@ -12,25 +13,17 @@ export class ProductManager{
 
 generaID = () => (this.producto.length === 0) ? 1: this.producto[this.producto.length -1].id +1
 
-abreArchivo = async () => {
-  
- 
-  try{ 
-    if(fs.existsSync(this.path))
-    {
-      this.producto= await JSON.parse(fs.readFileSync(this.path,'utf-8'));
-      const datos = this.producto;
-      //console.log(this.producto);
-      return datos;
-    } 
-      return false
+traeTodo = async () => {
+  try{  
+     
+      this.producto= await fs.promises.readFile(this.path,'utf-8');
+      const datos = JSON.parse(this.producto);
+      return datos; 
   }
-  catch(error){
-    console.log(error);
+  catch (error){
+    console.log("error trae todo")
   }
- 
-  
-  
+
 }
 
 
@@ -60,7 +53,7 @@ addproducto=async(product)=>{
           let Codigo=product['codigo'];
 
           
-          this.abreArchivo(); 
+          this.traeTodo(); 
           let id = this.generaID(); 
          
           if (this.encuentraCodigo(Codigo,id))
@@ -88,11 +81,8 @@ traeProductsBy = async(id) =>
  {
 
       try{
-          if (this.abreArchivo()){
-            //console.log (id);
-            const paso=this.producto;
-           // console.log (paso);
-          const producto = await paso.find((item) => item.id == id);
+          const paso= await this.traeTodo();
+          const producto =  paso.find((item) => item.id == id);
          
           if(producto === undefined)
           { 
@@ -105,7 +95,7 @@ traeProductsBy = async(id) =>
           return producto;
           }
           
-          }
+          
 
     }
     catch(error){
@@ -115,43 +105,16 @@ traeProductsBy = async(id) =>
 
  BorrarProducto = async(id) =>{
   try{
-    if (this.abreArchivo()){
-         
-    const arr=this.producto.map(function(obj){
-        return obj;
-    });
+    let archivo1 =   await this.traeTodo();
     
-    let arr2=[];
-    
-    for(let i=0;i< arr.length;i++)
-    {
+    archivo1 = archivo1.filter(item => item.id !=id);
+    await fs.promises.writeFile(this.path,JSON.stringify(archivo1,null,2));
+              
       
-        if(arr[i]['id']==id){
-           console.log("revisando item", arr[i]['id']);
-            console.log('se borra el elemento',id); 
-        }else{
-        let productoArray=arr[i];
-        arr2.push(productoArray);
-       }
-    }
-    this.producto=arr2;
-    console.log('Largo Nuevo array',this.producto.length);
-    try {
-    
-        fs.writeFileSync(this.path,JSON.stringify(this.producto,null,2));
-    
-        } 
-        catch (err){
-    
-        console.log('error',err);
-    
-        }
-
-    
-      }
   }
   catch(error){
     console.log(error);
+    
   }
 
  }
@@ -160,7 +123,7 @@ traeProductsBy = async(id) =>
 ModificarProducto = async(id,description) =>{
   try{
 
-    if (this.abreArchivo()){
+    if (this.traeTodo()){
          
       const arr=ProductManager.producto.map(function(obj){
           return obj;
