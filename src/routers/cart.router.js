@@ -6,7 +6,7 @@ const router =Router();
 
 
 const cartClass = new CartManager;
-cartClass.path='./src/cart.txt';
+cartClass.path='./src/cart.json';
 
 const productClass = new ProductManager;
 productClass.path='./src/productos.txt';

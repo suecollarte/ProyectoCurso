@@ -21,11 +21,10 @@ traeTodoCart = async () => {
       console.log(this.cart);
        
       const datos = JSON.parse(this.cart);
-      //COMO Despliego este archivo??
       return datos; 
   }
   catch (error){
-    console.log("error trae todo")
+    console.log(error)
   }
 
 }

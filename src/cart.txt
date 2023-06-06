@@ -1,6 +1,0 @@
-[
-{"IdCarro": 0,"idCliente":100, productos:[{id:0,"cantidad":1}]},
-{"IdCarro": 1,"idCliente":100, productos:[{"id":1,"cantidad":4}]},
-{"IdCarro": 2, "idCliente:200, productos:[{"id":3,"cantidad":2}]},
-{"IdCarro": 3, "idCliente:200, productos:[{"id":5,"cantidad":2}]}
-]
