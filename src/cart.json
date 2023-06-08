@@ -1,6 +1,42 @@
 [
-{"IdCarro": 0,"idCliente":100, "productos":[{"id":0,"cantidad":1}]},
-{"IdCarro": 1,"idCliente":100, "productos":[{"id":1,"cantidad":4}]},
-{"IdCarro": 2, "idCliente":200, "productos":[{"id":3,"cantidad":2}]},
-{"IdCarro": 3, "idCliente":200, "productos":[{"id":5,"cantidad":2}]}
+  {
+    "id": 0,
+    "idCliente": 200,
+    "producto": [
+      {
+        "id": 3,
+        "idproducto": 452
+      }
+    ]
+  },
+  {
+    "idCliente": 201,
+    "producto": [
+      {
+        "id": 0,
+        "idproducto": 411
+      }
+    ],
+    "id": 2
+  },
+  {
+    "idCliente": 201,
+    "producto": [
+      {
+        "id": 0,
+        "idproducto": 412
+      }
+    ],
+    "id": 3
+  },
+  {
+    "idCliente": 201,
+    "producto": [
+      {
+        "id": 0,
+        "idproducto": 5
+      }
+    ],
+    "id": 4
+  }
 ]

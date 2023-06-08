@@ -27,11 +27,10 @@ if (!cart) return response.status(404).json({message: `${id} NO EXISTE `})
 
 //agrega 
 router.post('/', async (request,response) =>{
-    const idClient= request.params.id;
-    const producto = request.body;
-    const cartNuevo= {id, producto};
-    await cartClass.addCart(cartNuevo);
-    response.status(201).json({message: 'Carro Creado',data: productNuevo}) 
+    const {idCliente,producto}=request.body;
+    //console.log("idCliente",idCliente);
+    await cartClass.addCart({idCliente, producto});
+    response.status(201).json({message: 'Carro Creado',data: producto}) 
     
     })  
 //actualizacion
@@ -47,7 +46,7 @@ router.put('/:id', async (request,response) =>{
 //eliminacion
 router.delete('/:id', async (request,response) =>{
   const id = request.params.id;
-  cartClass.borrarCarro(id);
+  cartClass.borrarCart(id);
   response.status(201).json({message: 'Cart Borrado',id})
 })
 
