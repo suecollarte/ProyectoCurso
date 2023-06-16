@@ -14,6 +14,6 @@ response.json('<h1>Despliegue </h1>');
 
 })
  
-app.use('/producto',productoRoute);
-app.use('/carts',cartRoute);
+app.use('/api/products',productoRoute);
+app.use('/api/carts',cartRoute);
 app.listen(8080, () => console.log('Arriba el servidor'))

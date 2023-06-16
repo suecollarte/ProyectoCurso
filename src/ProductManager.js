@@ -14,59 +14,52 @@ export class ProductManager{
 generaID = () => (this.producto.length === 0) ? 1: this.producto[this.producto.length -1].id +1
 
 traeTodo = async () => {
-  try{  
-     
+  
       this.producto= await fs.promises.readFile(this.path,'utf-8');
       const datos = JSON.parse(this.producto);
       return datos; 
-  }
-  catch (error){
-    console.log("error trae todo")
-  }
-
+ 
 }
 
 
 encuentraCodigo = async(Codigo,id) =>{
   //const todo= this.producto;
-  try{
+ 
       if (id >1)
       {
-          const p1= await this.producto.find(element => element.codigo === Codigo );
+          const p1= await this.producto.find(element => element.code === Codigo );
           if(p1 != undefined)
           {
-            console.log("no es posible ya existe codigo",p1.codigo);
             return false
           }
           
       }
       return true
-}
-catch(error){
-     console.log(error)
-}
+
+
 }
 
 addProducto = async(product)=>{
         
   try{
-          let Codigo=product['codigo'];
+          let Codigo=product['code'];
           this.producto= await this.traeTodo(); 
           
-          let id = await this.generaID(); 
+          let id =  this.generaID(); 
          
           if (this.encuentraCodigo(Codigo,id))
           {
           product['id']=id;
+          console.log(product);
           this.producto.push(product);
-          fs.promises.writeFile(this.path, JSON.stringify(this.producto), (error) => {
+          await fs.promises.writeFile(this.path, JSON.stringify(this.producto), (error) => {
               if (error)
-                return console.log("error");
+                return console.error(e);
             }); 
           }
   }
   catch(error){
-    console.log(error);
+    console.error(e);
   }
 
  }
@@ -83,10 +76,8 @@ traeProductsBy = async(id) =>
           { 
             return false
           }
-
           else
           { 
-            //console.log (producto);
           return producto;
           }
           
@@ -94,42 +85,36 @@ traeProductsBy = async(id) =>
 
     }
     catch(error){
-      console.log(error);
+      console.error(e);;
     }
  }
 
  BorrarProducto = async(id) =>{
-  try{
+ 
     let archivo1 =   await this.traeTodo();
     
     archivo1 = archivo1.filter(item => item.id !=id);
-    await fs.promises.writeFil<e(this.path,JSON.stringify(archivo1,null,2));
-              
-      
-  }
-  catch(error){
-    console.log(error);
+    await fs.promises.writeFile(this.path,JSON.stringify(archivo1,null,2), (error) => {
+      if (error)
+        return console.error(e);
+    }); 
     
-  }
+
 
  }
 
-
 ModificarProducto = async(id,data) =>{
-  try{
+
 
     let archivo= await this.traeTodo(); 
-    const prodIndex = archivo.findIndex(item => item.id == id)
+    const prodIndex = archivo.findIndex(item => item.code == id)
     archivo[prodIndex]={ ...archivo[prodIndex], ...data }
-    await  fs.promises.writeFile(this.path,JSON.stringify(archivo,null,2));
+    await  fs.promises.writeFile(this.path,JSON.stringify(archivo,null,2), (error) => {
+      if (error)
+        return console.error(error);
+    }); 
       
-          
-
-  }
-  catch(error){
-    console.log(error);
-  }
-
+  
  }
 }
 
