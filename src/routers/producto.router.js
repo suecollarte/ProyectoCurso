@@ -1,5 +1,6 @@
 import {Router} from 'express';
-import { ProductManager } from '../ProductManager.js';
+import { ProductManager } from '../dao/fsManagers/ProductManagerBD.js';
+import { productModel } from '../dao/models/product.model.js';
 
 const router =Router();
 
@@ -10,13 +11,22 @@ const router =Router();
 // borrar producto
 
 const productClass = new ProductManager;
-productClass.path='./src/productos.json';
+//productClass.path='./src/productos.json';
+// esta data onwire se renderiza json
+// para los onwire html se hace una vista ese es con res.render
+
 
 router.get('/', async (req,res) =>{
+  try{
     const products = await productClass.traeTodo(); 
-    console.log("productos",products)
     res.status(201).json({status:"success", productos:products});
+  }
+    catch (err) {
+    
+      //console.error(e)
   
+      res.status(500).json({status:'error', error: err.message})
+    } 
   
 })
 router.get('/:pid', async (request, response) =>{
@@ -27,28 +37,32 @@ router.get('/:pid', async (request, response) =>{
       if (!producto) return response.status(404).json({message: `${id} NO EXISTE `})
   //response.json(producto)
       response.send({producto})
-  }catch (e) {
-    console.error(e)
+  }catch (err) {
+    //console.error(e)
+    response.status(500).json({status:'error', error: err.message})
   }
 })
-router.post('/', async (request,response) =>{
-try{
-   const {title,description,code,price,status,stock,category,thumbnails} = request.body;
 
-console.log(request.body);
-       const productNuevo= {title,description,code,price,stock,category,thumbnails};
-    const regreso= await productClass.addProducto(productNuevo);
-    if (regreso){
-      response.status(201).json({message: 'Producto Creado',data: productNuevo}) 
+router.post('/', async (req,res) =>
+{
+
+   const productoNew= req.body
+try{
+ 
+    const result= await productClass.addProducto(productoNew);
+    if (result){
+      res.status(201).json({status:'success', payload:result})   
     }
     else{
-      response.status(201).json({message: 'Producto NO CREADO YA EXISTE',data: productNuevo}) 
+      res.status(201).json({status: 'Producto NO CREADO YA EXISTE',data: productoNew}) 
         }
-
+  }catch (err) {
     
-  }catch (e) {
-    console.error(e)
+    //console.error(e)
+
+    res.status(500).json({status:'error', error: err.message})
   }  
+
   })  
 
     //actualizacion
@@ -56,20 +70,41 @@ router.put('/:id', async (request,response) =>{
       try{
           const id = request.params.id;
           const data= request.body;
-          await productClass.ModificarProducto(id, data)
-          //response.status(201).json({message: 'Producto Actualizado',id})
-          response.status(201).send({message: 'Producto Actualizado',id})
-      }catch (e) {
-    console.error(e)
-  }
+          const result = await productClass.ModificarProducto(id, data)
+          if (result){
+               response.status(201).json({status: 'Producto no se encuentra Actualizado',payload:id})
+          
+          }else{
+             response.status(201).json({status: 'Producto Actualizado',payload:id})
+       
+          }
+                    //response.status(201).send({message: 'Producto Actualizado',id})
+      }catch (err) {
+    
+        //console.error(e)
+    
+        res.status(500).json({status:'error', error: err.message})
+      }  
 })
 
 //eliminacion
 router.delete('/:id', async (request,response) =>{
   const id = request.params.id;
-  productClass.BorrarProducto(id);
+  try{
+    const result= productClass.BorrarProducto(id);
+    if(result== null){
+      response.status(404).send({message: 'Producto No se encuentra',id})
+     }
+    response.status(200).json({status: 'Exito Producto Borrado',id})
+  }
+  catch (err) {
+    //console.error(e)
+    response.status(500).json({status:'error', error: err.message})
+  }  
+
+  
   //response.status(201).json({message: 'Producto Borrado',id})
-  response.status(201).send({message: 'Producto Borrado',id})
+  
 })
 
 
