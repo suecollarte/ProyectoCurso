@@ -3,10 +3,12 @@ import handlebars from 'express-handlebars'
 
 import productoRoute from './routers/producto.router.js'
 import cartRoute from './routers/cart.router.js'
-import mongoose from 'mongoose'
+import * as mongoose from 'mongoose'
 //import viewproduct from "./routers/views.router.js"
 const MONGOURI = 'mongodb+srv://admin:admin@cluster0.hjgxmmk.mongodb.net/';
+//const MONGOURI='mongodb://localhost:27017'
 const MONGODB = 'ecommerce';
+//const MONGODB='';
 const app= express();
 app.use(express.json());
 //para poder recibir lo del cliente los json
@@ -43,9 +45,10 @@ app.use('/api/carts',cartRoute);
 mongoose.set('strictQuery',false);
 
 try{
-    await mongoose.connect(MONGOURI+MONGODB,{
-        useUnifiedTopology:true})
-    app.listen(8080, () => console.log('Arriba el servidor'))
+    //await mongoose.connect(MONGOURI+MONGODB,{
+      //  useUnifiedTopology:true})
+      await mongoose.createConnection(MONGOURI, { dbName: MONGODB })  
+    app.listen(8080, () => console.log('Arriba el servidor APP'))
     }
 catch(err){
     console.log(err.message)

@@ -1,4 +1,5 @@
 import { cartModel } from '../models/cart.model.js';
+import { productModel } from '../models/product.model.js';
 
 
 export class CartManager{
@@ -23,11 +24,40 @@ traeTodoCart = async () => {
 
 }
 
-addCart = async(Carrito)=>{
+addCart = async(CarritoProd)=>{
         
   try{       
-        const cars = new cartModel(Carrito)
-        const result = await cars.save();
+        const cars = await productModel.aggregate(
+          //concatenas
+          [
+          {$match:{code:CarritoProd[0].code}},
+          {$group:{
+            product:'$code',
+            price:'$price',
+            quantity:CarritoProd[0].quantity
+          }
+          },
+          {
+            $group:{
+              _id:1,
+              products:{$push:"$$ROOT"}
+            }
+          },
+          //operaciones en otra collection
+          {
+            $project:{
+              _id:0,
+              cars:"$cars"
+            }
+          },
+          {
+            //reportes
+            $merge:{into:'reportescarts'}
+          }
+          ])
+          
+          
+        //const result = await cars.save();
           
   }
   catch(error){
@@ -60,7 +90,7 @@ console.error(e);;
    
  }
 
- borrarCart = async(id) =>{
+ BorrarCartProducto = async(id,pid) =>{
       try{
         const result = await cartModel.findByIdAndDelete(id)
      if(result== null){

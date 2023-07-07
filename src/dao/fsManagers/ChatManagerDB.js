@@ -11,8 +11,6 @@ export class ChatManager{
   static Chat=[];
   
 
-generaIDCarro = () => (this.Chat.length === 0) ? 1: this.Chat[this.Chat.length -1].id +1
-
 traeTodoChat = async () => {
  
      

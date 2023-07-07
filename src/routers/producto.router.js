@@ -18,6 +18,10 @@ const productClass = new ProductManager;
 
 router.get('/', async (req,res) =>{
   try{
+    let page= parseInt(req.query.page) || 1
+    let limit = parseInt(req.query.limit) || 5
+    console.log(page);
+    console.log(limit)
     const products = await productClass.traeTodo(); 
     res.status(201).json({status:"success", productos:products});
   }

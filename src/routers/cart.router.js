@@ -24,6 +24,7 @@ router.get('/:cid', async (request, response) =>{
  
   if (!cart) return response.status(404).json({message: `${id} NO EXISTE `})
     response.status(201).send(cart)
+    response.render('carrito',cart)
   }catch (e) {
     console.error(e)
   }
@@ -76,4 +77,25 @@ router.put('/:cid', async (request,response) =>{
     
 })
 
+
+//eliminacion
+router.delete('/:cid/product/:pid', async (request,response) =>{
+  const cid= request.params.cid;  
+  const pid= request.params.pid;  
+  try{
+    const result= cartClass.BorrarCartProducto(cid,pid);
+    if(result== null){
+      response.status(404).send({message: 'Carro Producto No se encuentra',id})
+     }
+    response.status(200).json({status: 'Exito Carro Producto Borrado',id})
+  }
+  catch (err) {
+    //console.error(e)
+    response.status(500).json({status:'error', error: err.message})
+  }  
+
+  
+  //response.status(201).json({message: 'Producto Borrado',id})
+  
+})
 export default router

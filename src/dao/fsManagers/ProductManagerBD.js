@@ -11,7 +11,16 @@ generaID = () =>(this.producto.length === 0) ? 1: this.producto[this.producto.le
 
 traeTodo = async ()=> {
   try{
-    const productos= await productModel.find()
+    console.log("log");
+   const productos= await productModel.find()
+  /* const productos =await productModel.paginate({},{page,limit,lean:true})
+   productos.prevLink = productos.hasPrevPage
+                        ? `/product?page=${productos.prevPage}`
+                        :''
+    productos.nextLink = productos.hasNextPage
+    ? `/product?page=${productos.nextPage}`
+    :'' */ 
+
     console.log(productos)
     return productos
   }
@@ -26,13 +35,14 @@ traeTodo = async ()=> {
 addProducto = async(product)=>{
         
   try{
-          this.producto= await this.traeTodo(); 
-          let id =  this.generaID(); 
-          product['id']=id;
+          //this.producto= await this.traeTodo(); 
+          //let id =  this.generaID(); 
+         // product['id']=id;
           
           const productos= new productModel(product)
           const result= await productos.save(); 
           //await productos.save()
+          console.log(result)
           return result
           }
   catch(e){
